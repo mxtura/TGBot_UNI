@@ -1,0 +1,9 @@
+**/__pycache__/
+.idea/
+env/*
+.vscode/
+venv/*
+creds.json
+.env
+data/database.db
+Instruction.docx
