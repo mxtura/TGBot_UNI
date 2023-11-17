@@ -90,6 +90,6 @@ def register_requested_data_sending(dp):
     dp.register_message_handler(send_retakes, UserTypeFilter("manager"), 
                                 content_types=['text'], text='Получить пересдачи')
     dp.register_message_handler(send_retakes, UserTypeFilter("teacher"), 
-                                content_types=['text'], text='Получить пересдачи')
+                                content_types=['text'], text='Получить ссылку на таблицу')
     dp.register_message_handler(send_problem_reporting_email, ~UserTypeFilter(None), 
                                 content_types=['text'], text='Сообщить о проблеме')

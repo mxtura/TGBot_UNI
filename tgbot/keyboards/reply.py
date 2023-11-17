@@ -29,7 +29,7 @@ teacher_keyboard = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text="Получить ведомости"),
-            KeyboardButton(text="Получить пересдачи")
+            KeyboardButton(text="Пересдачи")
         ],
         [
             KeyboardButton(text="Рассылка"),
@@ -181,6 +181,19 @@ student_debts_keyboard = ReplyKeyboardMarkup(
         [
             KeyboardButton(text="Посмотреть долги"),
             KeyboardButton(text="Записаться на пересдачу")
+        ],
+        [
+            KeyboardButton(text="Отмена"),
+        ],
+    ],
+    resize_keyboard=True, one_time_keyboard=False, input_field_placeholder=action_request
+)
+
+teacher_retakes_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="Получить ссылку на таблицу"),
+            KeyboardButton(text="Получить список пересдач")
         ],
         [
             KeyboardButton(text="Отмена"),

@@ -31,6 +31,8 @@ async def open_students_editing_menu(message: Message):
 async def open_students_debts_menu(message: Message):
     await message.answer("<b>Меню долгов</b>", reply_markup=rkb.student_debts_keyboard)
     
+async def open_teacher_retakes_menu(message: Message):
+    await message.answer("<b>Меню пересдач</b>", reply_markup=rkb.teacher_retakes_keyboard)
 
 
 def register_menu(dp):
@@ -52,3 +54,5 @@ def register_menu(dp):
                                 content_types=['text'], text=['Студенты'])
     dp.register_message_handler(open_students_debts_menu, UserTypeFilter("student"),
                                 content_types=['text'], text=['Долги'])
+    dp.register_message_handler(open_teacher_retakes_menu, UserTypeFilter("teacher"),
+                                content_types=['text'], text=['Пересдачи'])
