@@ -176,6 +176,19 @@ back_save_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=False, input_field_placeholder="группа1, группа2..."
 )
 
+student_debts_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="Посмотреть долги"),
+            KeyboardButton(text="Записаться на пересдачу")
+        ],
+        [
+            KeyboardButton(text="Отмена"),
+        ],
+    ],
+    resize_keyboard=True, one_time_keyboard=False, input_field_placeholder=action_request
+)
+
 # group_change_keyboard = ReplyKeyboardMarkup(
 #     keyboard=[
 #         [

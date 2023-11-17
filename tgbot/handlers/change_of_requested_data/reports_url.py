@@ -17,7 +17,7 @@ async def request_reports_url(message: Message):
 async def change_reports_url(message: Message, state: FSMContext):
     if is_string_an_url(message.text):
         await db.change_report_cards_url(message.text)
-        await message.answer(text="Ссылка на каталок ведомостей изменена", reply_markup=rkb.manager_keyboard)
+        await message.answer(text="Ссылка на каталог ведомостей изменена", reply_markup=rkb.manager_keyboard)
     else:
         await message.answer(text="Ссылка введена некорректно", reply_markup=rkb.manager_keyboard)
     await state.finish()

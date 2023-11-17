@@ -28,6 +28,10 @@ async def open_employees_editing_menu(message: Message):
 async def open_students_editing_menu(message: Message):
     await message.answer("<b>Меню редактирования студентов</b>", reply_markup=rkb.students_editing_keyboard)
 
+async def open_students_debts_menu(message: Message):
+    await message.answer("<b>Меню долгов</b>", reply_markup=rkb.student_debts_keyboard)
+    
+
 
 def register_menu(dp):
     dp.register_message_handler(open_links_menu, UserTypeFilter("manager"),
@@ -46,3 +50,5 @@ def register_menu(dp):
                                 content_types=['text'], text=['Сотрудники'])
     dp.register_message_handler(open_students_editing_menu, UserTypeFilter("manager"),
                                 content_types=['text'], text=['Студенты'])
+    dp.register_message_handler(open_students_debts_menu, UserTypeFilter("student"),
+                                content_types=['text'], text=['Долги'])

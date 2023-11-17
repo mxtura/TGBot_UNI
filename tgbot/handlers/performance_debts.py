@@ -94,7 +94,7 @@ async def find_rows_and_columns(message: Message, workbook):
     if message.text == "Успеваемость":
         await create_performance_message(message, sheet, target_row, last_name_col, first_name_col, middle_name_col, 
                                         mark_col, subject_name_col)
-    elif message.text == "Долги":
+    elif message.text == "Посмотреть долги":
         await create_debt_message(message, sheet, target_row, last_name_col, first_name_col, middle_name_col, 
                                   mark_col, subject_name_col, semestra_col)
 
@@ -213,7 +213,7 @@ async def find_rows_and_columns_19(message: Message, sheet):
             target_row = row + 1
             subject_name_col = col - 1
             mark_col = subject_name_col + 3
-            if message.text == "Долги":
+            if message.text == "Посмотреть долги":
                 await create_debt_message_19(message, sheet, target_row, subject_name_col, mark_col)
                 break
             elif message.text == "Успеваемость":
@@ -259,4 +259,4 @@ def register_performance_debts_check(dp):
     dp.register_message_handler(send_data_processing_notification, UserTypeFilter("student"),
                                 content_types=['text'], text=['Успеваемость'])
     dp.register_message_handler(send_data_processing_notification, UserTypeFilter("student"),
-                                content_types=['text'], text=['Долги'])
+                                content_types=['text'], text=['Посмотреть долги'])
