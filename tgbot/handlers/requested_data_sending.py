@@ -1,4 +1,8 @@
 """Отправляет все ссылки, запрашиваемые в одно действие."""
+import openpyxl 
+import io
+from urllib.request import urlopen
+
 from aiogram.types import Message
 from tgbot.filters.user_type import UserTypeFilter
 from tgbot.models.database_instance import db
@@ -49,13 +53,52 @@ async def send_reports(message: Message):
         await message.answer(text=reports_url[0])
 
 
-async def send_retakes(message: Message):
+async def send_retakes_table_url(message: Message):
     """Отправляет ссылку на ведомости пересдач."""
     retakes_url = await db.get_retake_cards_url()
     if not retakes_url:
         await message.answer(text="<b>Ссылка на ведомости пересдач еще не загружена менеджером!</b>")
     else:
         await message.answer(text=retakes_url[0])
+
+
+async def send_retakes_list(message: Message):
+    """Отправляет список студентов, записавшихся на пересдачу."""
+    retakes_url = await db.get_retake_cards_url()
+    if not retakes_url:
+        await message.answer(text="<b>Ссылка на ведомости пересдач еще не загружена менеджером!</b>")
+    else:
+        file_id = retakes_url[0].split('/')[-2]
+        file_url = f'https://drive.google.com/u/0/uc?id={file_id}&export=download'
+        wb = openpyxl.open(filename=io.BytesIO(urlopen(file_url).read()))
+        ws = wb.active
+        teacher_fn = str(await db.get_user_fn(message.from_user.id)).strip("(,')")
+        teacher_mn = str(await db.get_user_mn(message.from_user.id)).strip("(,')")
+        teacher_ln = str(await db.get_user_ln(message.from_user.id)).strip("(,')")
+
+        students_data = ""  
+        row = 2
+        while (ws.cell(row, 1).value is not None):
+            if (teacher_ln == str(ws.cell(row, 11).value) and 
+                teacher_fn == str(ws.cell(row, 12).value) and
+                teacher_mn == str(ws.cell(row, 13).value)):
+
+                students_data = ""
+                faculty = "Факультет: " + ws.cell(row, 1).value + "\n"
+                direction = "Направление: " + ws.cell(row, 2).value + "\n"
+                group = "Группа: " + str(ws.cell(row, 4).value) + "\n"
+                student = "Студент: " + ws.cell(row, 5).value + " " +  ws.cell(row, 6).value + " " +  ws.cell(row, 7).value + "\n"
+                discipline = "Предмет: " + ws.cell(row, 9).value + "\n"
+                control = "Контроль: " + ws.cell(row, 10).value + "\n"
+                date_of_retake = "Дата пересдачи: " + str(ws.cell(row, 14).value)[:10] + "\n"
+                time_of_retake = "Время пересдачи: " + str(ws.cell(row, 15).value)[:5] + "\n"
+                students_data += faculty + direction + group + student + discipline + control + date_of_retake + time_of_retake + "\n"
+                await message.answer(text=students_data)
+
+            row+=1
+
+        if (students_data == ""):
+            await message.answer(text="Нет студентов, записавшихся к Вам на пересдачу.")
 
 
 async def send_problem_reporting_email(message: Message):
@@ -87,9 +130,11 @@ def register_requested_data_sending(dp):
                                 content_types=['text'], text=['Получить ведомости'])
     dp.register_message_handler(send_reports, UserTypeFilter("teacher"), 
                                 content_types=['text'], text=['Получить ведомости'])
-    dp.register_message_handler(send_retakes, UserTypeFilter("manager"), 
+    dp.register_message_handler(send_retakes_table_url, UserTypeFilter("manager"), 
                                 content_types=['text'], text='Получить пересдачи')
-    dp.register_message_handler(send_retakes, UserTypeFilter("teacher"), 
+    dp.register_message_handler(send_retakes_table_url, UserTypeFilter("teacher"), 
                                 content_types=['text'], text='Получить ссылку на таблицу')
+    dp.register_message_handler(send_retakes_list, UserTypeFilter("teacher"), 
+                                content_types=['text'], text='Получить список пересдач')
     dp.register_message_handler(send_problem_reporting_email, ~UserTypeFilter(None), 
                                 content_types=['text'], text='Сообщить о проблеме')
