@@ -257,9 +257,39 @@ employees_del_cancel_keyboard = ReplyKeyboardMarkup(
     input_field_placeholder="Иванов Иван Иванович, Петров Петр Петрович..."
 )
 
-retake_input_cancel_keyboard = ReplyKeyboardMarkup(
+faculty_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Название факультета"
+)
+
+direction_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Название направления"
+)
+
+group_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Номер группы"
+)
+
+recod_book_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Номер зачетки"
+)
+
+subject_input_cancel_keyboard = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text="Отмена")]],
     resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Название предмета"
+)
+
+date_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="01.01.2024"
+)
+
+time_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="00:00"
 )
 
 empty_keyboard = ReplyKeyboardRemove()
