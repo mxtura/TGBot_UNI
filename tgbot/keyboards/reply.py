@@ -216,6 +216,7 @@ teacher_retakes_keyboard = ReplyKeyboardMarkup(
 # )
 
 # Переименовать их более корректно
+
 login_input_cancel_keyboard = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text="Отмена")]],
     resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Логин"
@@ -254,6 +255,11 @@ employees_del_cancel_keyboard = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text="Отмена")]],
     resize_keyboard=True, one_time_keyboard=True,
     input_field_placeholder="Иванов Иван Иванович, Петров Петр Петрович..."
+)
+
+retake_input_cancel_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Отмена")]],
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Название предмета"
 )
 
 empty_keyboard = ReplyKeyboardRemove()

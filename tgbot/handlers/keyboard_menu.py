@@ -8,22 +8,17 @@ from .personal_data_editing.personal_data_form import open_personal_data_form
 async def open_links_menu(message: Message):
     await message.answer(text="Меню редактирования ссылок", reply_markup=rkb.links_menu_keyboard)
 
-
 async def open_users_editing_menu(message: Message):
     await message.answer(text="Меню редактирования пользователей", reply_markup=rkb.users_editing_keyboard)
-
 
 async def open_check_links_menu(message: Message):
     await message.answer(text="Меню проверки ссылок", reply_markup=rkb.check_links_menu_keyboard)
 
-
 async def open_mailing_menu(message: Message):
     await message.answer(text="Меню рассылки", reply_markup=rkb.mailing_keyboard)
 
-
 async def open_employees_editing_menu(message: Message):
     await message.answer("Меню редактирования сотрудников", reply_markup=rkb.employees_editing_keyboard)
-
 
 async def open_students_editing_menu(message: Message):
     await message.answer("<b>Меню редактирования студентов</b>", reply_markup=rkb.students_editing_keyboard)
@@ -33,7 +28,6 @@ async def open_students_debts_menu(message: Message):
     
 async def open_teacher_retakes_menu(message: Message):
     await message.answer("<b>Меню пересдач</b>", reply_markup=rkb.teacher_retakes_keyboard)
-
 
 def register_menu(dp):
     dp.register_message_handler(open_links_menu, UserTypeFilter("manager"),

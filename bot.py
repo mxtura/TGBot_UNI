@@ -43,6 +43,7 @@ from tgbot.handlers.mailing.manager_mailing_form import register_manager_mailing
 from tgbot.handlers.mailing.teacher_mailing_form import register_teacher_mailing_form
 from tgbot.handlers.requested_data_sending import register_requested_data_sending
 from tgbot.handlers.role_change import register_role_chenge
+from tgbot.handlers.debt_management.registration_for_retake import register_reg_retake
 
 from tgbot.models.database_instance import db
 
@@ -92,6 +93,7 @@ def register_all_handlers(dp):
     register_group_name_change(dp)
     register_performance_list_change(dp)
     register_student_list_interaction(dp)
+    register_reg_retake(dp)
 
 
 def set_scheduled_jobs(scheduler, bot):
