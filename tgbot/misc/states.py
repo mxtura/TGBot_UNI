@@ -107,3 +107,15 @@ class MailingsStates(StatesGroup):
     manager_selection_state = State()
     date_input_state = State()
     time_input_state = State()
+
+class RegRetakeFSM(StatesGroup):
+    faculty = State()
+    direction = State()
+    group = State()
+    record_book = State()
+    subject = State()
+    control = State()
+    teacher = State()
+    date = State()
+    time = State()
+    agreement = State()
