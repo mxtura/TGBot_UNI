@@ -2,15 +2,18 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher import FSMContext
 
 import logging
-import openpyxl 
+import openpyxl
 import io
 from urllib.request import urlopen
-import tgbot.keyboards.inline as ikb
 import tgbot.keyboards.reply as rkb
-from tgbot.misc.states import LoginChangeStates
 from tgbot.filters.user_type import UserTypeFilter
 from tgbot.models.database_instance import db
 from tgbot.misc.states import RegRetakeFSM
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+from oauth2client.service_account import ServiceAccountCredentials
+import httplib2
+
 
 
 faculty_request_text = "Пожалуйста, напишите название факультета:"
@@ -49,7 +52,6 @@ async def getting_group(message: Message, state: FSMContext):
     
     await state.update_data(direction=message.text)  
     
-
     del_msg = await message.answer(text=group_request_text,
                                    reply_markup=rkb.group_input_cancel_keyboard)
     
@@ -58,8 +60,7 @@ async def getting_group(message: Message, state: FSMContext):
 async def getting_record_book(message: Message, state: FSMContext):
     
     await state.update_data(group=message.text)  
-    
-        
+            
     del_msg = await message.answer(text=record_book_request_text,
                                    reply_markup=rkb.recod_book_input_cancel_keyboard)
 
@@ -153,33 +154,32 @@ async def write_retakes_list(message: Message, state: FSMContext):
     retakes_url = await db.get_retake_cards_url()
     file_id = retakes_url[0].split('/')[-2]
     file_url = f'https://drive.google.com/u/0/uc?id={file_id}&export=download'
-
-    logger.info(file_url)
-
-    wb = openpyxl.load_workbook(filename=io.BytesIO(urlopen(file_url).read()))
-    ws = wb.active
+    fn = io.BytesIO(urlopen(file_url).read())
+    wb = openpyxl.load_workbook(fn)
     
+    ws = wb["Общие"]
+    logger.info(ws.title)
+
     teacher_data = await state.get_data()
     
-    row = ws.max_row + 1 
     
-    ws[f'A{row}'] = teacher_data["faculty"]
-    ws[f'B{row}'] = teacher_data["direction"]
-    ws[f'C{row}'] = teacher_data["group"][0]
-    ws[f'D{row}'] = teacher_data["group"]
-    ws[f'E{row}'] = student_fn
-    ws[f'F{row}'] = student_mn
-    ws[f'G{row}'] = student_ln
-    ws[f'H{row}'] = teacher_data["record_book"]
-    ws[f'I{row}'] = teacher_data["subject"]
-    ws[f'K{row}'] = teacher_data["teacher"].split()[0]
-    ws[f'L{row}'] = teacher_data["teacher"].split()[1]
-    ws[f'M{row}'] = teacher_data["teacher"].split()[2]
-    ws[f'N{row}'] = teacher_data["date"]
-    ws[f'O{row}'] = teacher_data["time"]
+    
+    ws.append([teacher_data["faculty"], teacher_data["direction"], teacher_data["group"][0], teacher_data["group"], student_fn, student_mn, student_ln, teacher_data["record_book"], teacher_data["subject"], teacher_data["teacher"].split()[0], teacher_data["teacher"].split()[1], teacher_data["teacher"].split()[2], teacher_data["date"], teacher_data["time"]])
+    
+    # Сохранение файла локально
+    local_filename = "temp.xlsx"
+    wb.save(local_filename)
+    wb.close()
 
-    wb.save(file_url)
-    
+    # Загрузка файла обратно на Google Drive
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('path/to/your/credentials.json', ['https://www.googleapis.com/auth/drive'])
+    http = credentials.authorize(httplib2.Http())
+    drive_service = build('drive', 'v3', http=http)
+
+    file_metadata = {'name': 'updated_file.xlsx'}
+    media = MediaFileUpload(local_filename, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    drive_service.files().update(fileId=file_id, body=file_metadata, media_body=media).execute()
+
     await message.answer("Данные успешно записаны")
 
 
