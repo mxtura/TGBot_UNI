@@ -68,6 +68,9 @@ async def send_retakes_list(message: Message):
     if not retakes_url:
         await message.answer(text="<b>Ссылка на ведомости пересдач еще не загружена менеджером!</b>")
     else:
+        await message.answer(text="Пожалуйста, подождите. Идет обработка данных.\n" + 
+                             "Это может занять несколько секунд.")
+        
         file_id = retakes_url[0].split('/')[-2]
         file_url = f'https://drive.google.com/u/0/uc?id={file_id}&export=download'
         wb = openpyxl.open(filename=io.BytesIO(urlopen(file_url).read()))
@@ -79,20 +82,20 @@ async def send_retakes_list(message: Message):
         students_data = ""  
         row = 2
         while (ws.cell(row, 1).value is not None):
-            if (teacher_ln == str(ws.cell(row, 11).value) and 
-                teacher_fn == str(ws.cell(row, 12).value) and
-                teacher_mn == str(ws.cell(row, 13).value)):
+            if (teacher_ln == str(ws.cell(row, 10).value) and 
+                teacher_fn == str(ws.cell(row, 11).value) and
+                teacher_mn == str(ws.cell(row, 12).value)):
 
                 students_data = ""
                 faculty = "Факультет: " + ws.cell(row, 1).value + "\n"
                 direction = "Направление: " + ws.cell(row, 2).value + "\n"
+                course = "Курс: " + str(ws.cell(row, 3).value) + "\n"
                 group = "Группа: " + str(ws.cell(row, 4).value) + "\n"
                 student = "Студент: " + ws.cell(row, 5).value + " " +  ws.cell(row, 6).value + " " +  ws.cell(row, 7).value + "\n"
-                discipline = "Предмет: " + ws.cell(row, 9).value + "\n"
-                control = "Контроль: " + ws.cell(row, 10).value + "\n"
-                date_of_retake = "Дата пересдачи: " + str(ws.cell(row, 14).value)[:10] + "\n"
-                time_of_retake = "Время пересдачи: " + str(ws.cell(row, 15).value)[:5] + "\n"
-                students_data += faculty + direction + group + student + discipline + control + date_of_retake + time_of_retake + "\n"
+                discipline = "Предмет: " + ws.cell(row, 8).value + "\n"
+                control = "Контроль: " + ws.cell(row, 9).value + "\n"
+                date_of_send = "Дата отправки: " + str(ws.cell(row, 13).value)[:10] + "\n"
+                students_data += faculty + direction + course + group + student + discipline + control + date_of_send + "\n"
                 await message.answer(text=students_data)
 
             row+=1
