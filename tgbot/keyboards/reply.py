@@ -202,6 +202,16 @@ teacher_retakes_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=False, input_field_placeholder=action_request
 )
 
+confirmation_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="Да"),
+            KeyboardButton(text="Нет")
+        ],
+    ],
+    resize_keyboard=True, one_time_keyboard=False, input_field_placeholder=action_request
+)
+
 # group_change_keyboard = ReplyKeyboardMarkup(
 #     keyboard=[
 #         [
@@ -287,9 +297,9 @@ date_input_cancel_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="01.01.2024"
 )
 
-time_input_cancel_keyboard = ReplyKeyboardMarkup(
+control_input_cancel_keyboard = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text="Отмена")]],
-    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="00:00"
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="экзамен"
 )
 
 empty_keyboard = ReplyKeyboardRemove()
