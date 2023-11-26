@@ -277,9 +277,9 @@ direction_input_cancel_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Название направления"
 )
 
-group_input_cancel_keyboard = ReplyKeyboardMarkup(
+course_input_cancel_keyboard = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text="Отмена")]],
-    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Номер группы"
+    resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Курс"
 )
 
 recod_book_input_cancel_keyboard = ReplyKeyboardMarkup(
