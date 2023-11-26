@@ -33,7 +33,7 @@ service = build('drive', 'v3', credentials=credentials)
 
 faculty_request_text = "Пожалуйста, напишите название факультета:"
 direction_request_text = "Пожалуйста, напишите название направления:"
-group_request_text = "Пожалуйста, напишите номер группы:"
+course_request_text = "Пожалуйста, напишите ваш курс:"
 subject_request_text = "Пожалуйста, напишите название предмета:"
 control_request_text = "Пожалуйста, напишите тип контроля:"
 teacher_request_text = "Пожалуйста, напишите ФИО преподавателя:"
@@ -59,18 +59,18 @@ async def getting_direction(message: Message, state: FSMContext):
     await RegRetakeFSM.direction.set()
     
 
-async def getting_group(message: Message, state: FSMContext):
+async def getting_course(message: Message, state: FSMContext):
     
     await state.update_data(direction=message.text)  
     
-    del_msg = await message.answer(text=group_request_text,
-                                   reply_markup=rkb.group_input_cancel_keyboard)
+    del_msg = await message.answer(text=course_request_text,
+                                   reply_markup=rkb.course_input_cancel_keyboard)
     await state.update_data(del_msg=del_msg)
-    await RegRetakeFSM.group.set()
+    await RegRetakeFSM.course.set()
     
 async def getting_subject(message: Message, state: FSMContext):
     
-    await state.update_data(group=message.text)  
+    await state.update_data(course=message.text)  
     
 
     del_msg = await message.answer(text=subject_request_text,
@@ -146,7 +146,7 @@ async def write_retakes_list(message: Message, state: FSMContext):
     # Записываем данные в найденную строку
     current_date = datetime.datetime.now().date().strftime("%d.%m.%Y")
 
-    data = [teacher_data["faculty"], teacher_data["direction"], teacher_data["group"][0], await db.get_user_group_name(message.from_user.id), student_ln, student_fn, student_mn, teacher_data["subject"], teacher_data["control"], teacher_data["teacher"].split()[0], teacher_data["teacher"].split()[1], teacher_data["teacher"].split()[2], current_date]
+    data = [teacher_data["faculty"], teacher_data["direction"], teacher_data["course"], await db.get_user_group_name(message.from_user.id), student_ln, student_fn, student_mn, teacher_data["subject"], teacher_data["control"], teacher_data["teacher"].split()[0], teacher_data["teacher"].split()[1], teacher_data["teacher"].split()[2], current_date]
     for col, value in enumerate(data, start=1):
         ws.cell(row=row, column=col).value = value
 
@@ -167,8 +167,8 @@ def register_reg_retake(dp):
     dp.register_message_handler(getting_faculty, UserTypeFilter("student"), content_types=['text'],
                                 text=['Записаться на пересдачу'])
     dp.register_message_handler(getting_direction, state=RegRetakeFSM.faculty)
-    dp.register_message_handler(getting_group, state=RegRetakeFSM.direction)
-    dp.register_message_handler(getting_subject, state=RegRetakeFSM.group)
+    dp.register_message_handler(getting_course, state=RegRetakeFSM.direction)
+    dp.register_message_handler(getting_subject, state=RegRetakeFSM.course)
     dp.register_message_handler(getting_control, state=RegRetakeFSM.subject)
     dp.register_message_handler(getting_teacher, state=RegRetakeFSM.control)
     dp.register_message_handler(agreement, state=RegRetakeFSM.teacher)

@@ -111,7 +111,7 @@ class MailingsStates(StatesGroup):
 class RegRetakeFSM(StatesGroup):
     faculty = State()
     direction = State()
-    group = State()
+    course = State()
     subject = State()
     control = State()
     teacher = State()
