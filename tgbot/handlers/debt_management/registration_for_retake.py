@@ -68,6 +68,7 @@ async def getting_course(message: Message, state: FSMContext):
     await state.update_data(del_msg=del_msg)
     await RegRetakeFSM.course.set()
     
+
 async def getting_subject(message: Message, state: FSMContext):
     
     await state.update_data(course=message.text)  
@@ -78,6 +79,7 @@ async def getting_subject(message: Message, state: FSMContext):
     await state.update_data(del_msg=del_msg)
     await RegRetakeFSM.subject.set()
     
+
 async def getting_control(message: Message, state: FSMContext):
 
     await state.update_data(subject=message.text)  
@@ -132,7 +134,7 @@ async def write_retakes_list(message: Message, state: FSMContext):
     fn = io.BytesIO(urlopen(file_url).read())
     wb = openpyxl.load_workbook(fn)
     
-    ws = wb["Общие"]
+    ws = wb.active
 
     msgs_to_del = teacher_data.get("msgs_to_del")
     for msg in msgs_to_del:
@@ -140,7 +142,7 @@ async def write_retakes_list(message: Message, state: FSMContext):
 
     # Находим первую пустую строку
     row = 1
-    while ws.cell(row=row, column=1).value is not None:
+    while ws.cell(row, 1).value is not None:
         row += 1
 
     # Записываем данные в найденную строку
@@ -148,7 +150,7 @@ async def write_retakes_list(message: Message, state: FSMContext):
 
     data = [teacher_data["faculty"], teacher_data["direction"], teacher_data["course"], await db.get_user_group_name(message.from_user.id), student_ln, student_fn, student_mn, teacher_data["subject"], teacher_data["control"], teacher_data["teacher"].split()[0], teacher_data["teacher"].split()[1], teacher_data["teacher"].split()[2], current_date]
     for col, value in enumerate(data, start=1):
-        ws.cell(row=row, column=col).value = value
+        ws.cell(row, col).value = value
 
 
     excel_buffer = io.BytesIO()
