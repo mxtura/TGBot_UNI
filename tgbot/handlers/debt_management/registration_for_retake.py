@@ -110,7 +110,7 @@ async def agreement(message: Message, state: FSMContext):
     del_msg = teacher_data.get("del_msg")
     del_msg.delete()
     
-    check = teacher_data["faculty"] + "\n" + teacher_data["direction"] + "\n" + teacher_data["group"] + "\n" + teacher_data["subject"] + "\n" + teacher_data["control"] + "\n" + teacher_data["teacher"]
+    check = teacher_data["faculty"] + "\n" + teacher_data["direction"] + "\n" + teacher_data["course"] + "\n" + teacher_data["subject"] + "\n" + teacher_data["control"] + "\n" + teacher_data["teacher"]
     
     msgs_to_del = [await message.answer(text=f"Правильно? \n<b>{check}</b>",
                                             reply_markup=rkb.confirmation_keyboard)]
