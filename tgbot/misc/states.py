@@ -109,9 +109,6 @@ class MailingsStates(StatesGroup):
     time_input_state = State()
 
 class RegRetakeFSM(StatesGroup):
-    faculty = State()
-    direction = State()
-    course = State()
     subject = State()
     control = State()
     teacher = State()

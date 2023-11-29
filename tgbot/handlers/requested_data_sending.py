@@ -82,20 +82,17 @@ async def send_retakes_list(message: Message):
         students_data = ""  
         row = 2
         while (ws.cell(row, 1).value is not None):
-            if (teacher_ln == str(ws.cell(row, 10).value) and 
-                teacher_fn == str(ws.cell(row, 11).value) and
-                teacher_mn == str(ws.cell(row, 12).value)):
+            if (teacher_ln == str(ws.cell(row, 7).value) and 
+                teacher_fn == str(ws.cell(row, 8).value) and
+                teacher_mn == str(ws.cell(row, 9).value)):
 
                 students_data = ""
-                faculty = "Факультет: " + ws.cell(row, 1).value + "\n"
-                direction = "Направление: " + ws.cell(row, 2).value + "\n"
-                course = "Курс: " + str(ws.cell(row, 3).value) + "\n"
-                group = "Группа: " + str(ws.cell(row, 4).value) + "\n"
-                student = "Студент: " + ws.cell(row, 5).value + " " +  ws.cell(row, 6).value + " " +  ws.cell(row, 7).value + "\n"
-                discipline = "Предмет: " + ws.cell(row, 8).value + "\n"
-                control = "Контроль: " + ws.cell(row, 9).value + "\n"
-                date_of_send = "Дата отправки: " + str(ws.cell(row, 13).value)[:10] + "\n"
-                students_data += faculty + direction + course + group + student + discipline + control + date_of_send + "\n"
+                group = "Группа: " + str(ws.cell(row, 1).value) + "\n"
+                student = "Студент: " + ws.cell(row, 2).value + " " +  ws.cell(row, 3).value + " " +  ws.cell(row, 4).value + "\n"
+                discipline = "Дисциплина: " + ws.cell(row, 5).value + "\n"
+                control = "Контроль: " + ws.cell(row, 6).value + "\n"
+                date_of_send = "Дата отправки: " + str(ws.cell(row, 10).value)[:10] + "\n"
+                students_data += group + student + discipline + control + date_of_send + "\n"
                 await message.answer(text=students_data)
 
             row+=1
