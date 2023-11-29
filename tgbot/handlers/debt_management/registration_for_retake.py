@@ -31,49 +31,13 @@ credentials = service_account.Credentials.from_service_account_file(
 service = build('drive', 'v3', credentials=credentials)
 
 
-faculty_request_text = "Пожалуйста, напишите название факультета:"
-direction_request_text = "Пожалуйста, напишите название направления:"
-course_request_text = "Пожалуйста, напишите ваш курс:"
-subject_request_text = "Пожалуйста, напишите название предмета:"
+subject_request_text = "Пожалуйста, напишите название дисциплины:"
 control_request_text = "Пожалуйста, напишите тип контроля:"
 teacher_request_text = "Пожалуйста, напишите ФИО преподавателя:"
 
 
-async def getting_faculty(message: Message, state: FSMContext):
-    """Просит ввести название факультета"""
-
-    del_msg = await message.answer(text=faculty_request_text,
-                                   reply_markup=rkb.faculty_input_cancel_keyboard)
-    
-    await state.update_data(del_msg=del_msg)
-    await RegRetakeFSM.faculty.set()
-    
-
-async def getting_direction(message: Message, state: FSMContext):
-    
-    await state.update_data(faculty=message.text)
-    
-    del_msg = await message.answer(text=direction_request_text,
-                                   reply_markup=rkb.direction_input_cancel_keyboard)
-    await state.update_data(del_msg=del_msg)
-    await RegRetakeFSM.direction.set()
-    
-
-async def getting_course(message: Message, state: FSMContext):
-    
-    await state.update_data(direction=message.text)  
-    
-    del_msg = await message.answer(text=course_request_text,
-                                   reply_markup=rkb.course_input_cancel_keyboard)
-    await state.update_data(del_msg=del_msg)
-    await RegRetakeFSM.course.set()
-    
-
 async def getting_subject(message: Message, state: FSMContext):
-    
-    await state.update_data(course=message.text)  
-    
-
+       
     del_msg = await message.answer(text=subject_request_text,
                                    reply_markup=rkb.subject_input_cancel_keyboard)
     await state.update_data(del_msg=del_msg)
@@ -110,7 +74,7 @@ async def agreement(message: Message, state: FSMContext):
     del_msg = teacher_data.get("del_msg")
     del_msg.delete()
     
-    check = teacher_data["faculty"] + "\n" + teacher_data["direction"] + "\n" + teacher_data["group"] + "\n" + teacher_data["subject"] + "\n" + teacher_data["control"] + "\n" + teacher_data["teacher"]
+    check = teacher_data["subject"] + "\n" + teacher_data["control"] + "\n" + teacher_data["teacher"]
     
     msgs_to_del = [await message.answer(text=f"Правильно? \n<b>{check}</b>",
                                             reply_markup=rkb.confirmation_keyboard)]
@@ -148,7 +112,7 @@ async def write_retakes_list(message: Message, state: FSMContext):
     # Записываем данные в найденную строку
     current_date = datetime.datetime.now().date().strftime("%d.%m.%Y")
 
-    data = [teacher_data["faculty"], teacher_data["direction"], teacher_data["course"], await db.get_user_group_name(message.from_user.id), student_ln, student_fn, student_mn, teacher_data["subject"], teacher_data["control"], teacher_data["teacher"].split()[0], teacher_data["teacher"].split()[1], teacher_data["teacher"].split()[2], current_date]
+    data = [await db.get_user_group_name(message.from_user.id), student_ln, student_fn, student_mn, teacher_data["subject"], teacher_data["control"], teacher_data["teacher"].split()[0], teacher_data["teacher"].split()[1], teacher_data["teacher"].split()[2], current_date]
     for col, value in enumerate(data, start=1):
         ws.cell(row, col).value = value
 
@@ -166,11 +130,8 @@ async def write_retakes_list(message: Message, state: FSMContext):
 
 
 def register_reg_retake(dp):
-    dp.register_message_handler(getting_faculty, UserTypeFilter("student"), content_types=['text'],
+    dp.register_message_handler(getting_subject, UserTypeFilter("student"), content_types=['text'],
                                 text=['Записаться на пересдачу'])
-    dp.register_message_handler(getting_direction, state=RegRetakeFSM.faculty)
-    dp.register_message_handler(getting_course, state=RegRetakeFSM.direction)
-    dp.register_message_handler(getting_subject, state=RegRetakeFSM.course)
     dp.register_message_handler(getting_control, state=RegRetakeFSM.subject)
     dp.register_message_handler(getting_teacher, state=RegRetakeFSM.control)
     dp.register_message_handler(agreement, state=RegRetakeFSM.teacher)
